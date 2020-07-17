@@ -5,18 +5,15 @@ from dash.dependencies import Input, Output
 import dash_html_components as html
 import ref
 import numpy as np
-from item import Item
+from item import Item, make_items_cards
 
+# initialize data
 net_worths = ref.get_net_worths()
 
-items = list()
-with open('item_price.csv') as f:
-    lines = f.readlines()
-    for line in lines:
-        items.append(Item(line))
+
 
 curr = ""
-inp_cards = html.Div([dbc.Row([items[i + j].make_div() for j in range(3)]) for i in range(0, len(items), 3)])
+items, inp_cards = make_items_cards()
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUMEN])
 
@@ -29,17 +26,24 @@ app.layout = html.Div(children=[
         value='Jeff Bezos'
     ),
     html.Br(),
+
+    # image of face of billionaire
     html.Div([
         html.H2(id='name'),
         html.Img(id='img'),
     ], style={"textAlign":"center"}),
+
     html.P(id='person_info'),
+    # item cards
     inp_cards,
+
     html.P(id='post_purchase')
 ])
 
 inp_list = [Input(item.id, "value") for item in items]
 
+# billionaire change events and item quantity change events
+# (to be separate potentially)
 @app.callback(
     [Output('name', 'children'),
      Output('img', 'src'),
