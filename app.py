@@ -10,8 +10,6 @@ from item import Item, make_items_cards
 # initialize data
 net_worths = ref.get_net_worths()
 
-
-
 curr = ""
 items, inp_cards = make_items_cards()
 

@@ -49,3 +49,4 @@ def make_items_cards():
     # make div of item cards
     inp_cards = html.Div([dbc.Row([items[i + j].make_div() for j in range(3)]) \
         for i in range(0, len(items), 3)])
+    return items, inp_cards
