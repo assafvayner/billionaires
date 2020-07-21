@@ -3,4 +3,4 @@ __pycache__/*
 prev_update_time.txt
 net_worth_json.txt
 test.py
-square_image.png
+square_img/*

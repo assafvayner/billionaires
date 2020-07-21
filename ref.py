@@ -61,17 +61,17 @@ def get_encoded_img(file_name):
     encoded_image = base64.b64encode(open(file_name, 'rb').read())
     return 'data:image/png;base64,{}'.format(encoded_image.decode())
 
-def get_square_image(name, df, curr_img):
+def get_square_image(name, df):
     """
     retrieves image 
     """
-    if  not os.path.exists('square_image.png') or curr_img != name:
+    if  not os.path.exists('square_img/' + name + '.png'):
         uri = df.loc[df['personName'] == name, 'squareImage'].values[0]
         print('invoking image api')
         response = requests.get(uri)
-        with open('square_image.png', 'wb') as f:
+        with open('square_img/' + name + '.png', 'wb') as f:
             f.write(response.content)
-    return get_encoded_img('square_image.png')
+    return get_encoded_img('square_img/' + name + '.png')
 
 def billionaire_dropdown_options(net_worths):
     """
@@ -115,6 +115,13 @@ def post_purchase(cost, name, net_worths):
     quot = round(diff / POP_US, 2)
     sen3 = f'That is enough left over to pay everyone in the United States ${quot}.'
     return _add_strings(sen1, sen2, sen3)
+
+def make_receipt(items, quants, name, net_worths):
+    receipt_cards = [dbc.Row([items[i + j].make_item_receipt_card(quants[i + j]) for j in range(3)]) for i in range(0, len(items), 3)]
+    print(type(receipt_cards))
+    return receipt_cards
+
+
 
 
 # def main():
