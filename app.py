@@ -6,6 +6,7 @@ import dash_html_components as html
 import ref
 import numpy as np
 from item import Item, make_items_cards, make_receipt
+import UI
 
 # initialize data
 net_worths = ref.get_net_worths()
@@ -14,19 +15,26 @@ items, inp_cards = make_items_cards()
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUMEN])
 
+app.title = 'Billionaires'
 app.layout = html.Div(children=[
-    html.H1('Introduction to this website'),
+    UI.title,
+    UI.credit,
+    UI.intro,
     html.Br(),
-    html.H2('Select billionaire to analyze wealth:'),
-    dcc.Dropdown(
-        id='billionaire',
-        options=ref.billionaire_dropdown_options(net_worths),
-        value='Jeff Bezos'
-    ),
+    html.Div([
+        html.H2('Select billionaire to analyze wealth:'),
+        dcc.Dropdown(
+            id='billionaire',
+            options=ref.billionaire_dropdown_options(net_worths),
+            value='Jeff Bezos',
+            clearable=False
+        )
+    ]),
     html.Br(),
 
     # image of face of billionaire
     html.H2(id='person_info'),
+
     html.Div([
         html.Div([
             html.H2(id='name'),
@@ -37,7 +45,7 @@ app.layout = html.Div(children=[
         html.Div(make_receipt(items, [0]*9, 'Jeff Bezos', net_worths),
                 id='receipt',
                 style={'width':'60%', 'display': 'inline-block'})
-    ]),
+    ], style={'padding':'20px'}),
 
     # item cards
     inp_cards,
@@ -75,10 +83,10 @@ def update_output(*args):
     total_cost = np.sum(inps * prices)
     post_purchase = ref.post_purchase(total_cost, name, net_worths)
     res.append(post_purchase)
-    receipt = make_receipt(items, args, name, net_worths)
+    receipt = make_receipt(items, inps, name, net_worths)
     res.append(receipt)
     return tuple(res)
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)

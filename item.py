@@ -70,5 +70,5 @@ def make_receipt(items, quants, name, net_worths):
     total = sum([items[i].price * quants[i] for i in range(len(items))])
     cost = html.H3('The total cost of the selected items is: $' + str(total))
     
-    final = html.H3(name + 'will have $' + str(net_worth - total) + ' after purchasing the selected items.')
+    final = html.H3(name + ' will have $' + str(net_worth - total) + ' after purchasing the selected items.')
     return [info, receipt_cards, html.Br(), cost, html.Br(), final]
